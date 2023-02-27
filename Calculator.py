@@ -43,3 +43,50 @@ class Calculator:
         self.create_operator_buttons()
         self.create_special_buttons()
         self.bind_keys()
+
+    def bind_keys(self):
+        self.window.bind("<Return>", lambda event: self.evaluate())
+        for key in self.digits:
+            self.window.bind(str(key), lambda event, digit=key: self.add_to_expression(digit))
+
+        for key in self.operations:
+            self.window.bind(key, lambda event, operator=key: self.append_operator(operator))
+
+    def create_special_buttons(self):
+        self.create_clear_button()
+        self.create_equals_button()
+        self.create_square_button()
+        self.create_sqrt_button()
+
+    def create_display_labels(self):
+        total_label = tk.Label(self.display_frame, text=self.total_expression, anchor=tk.E, bg=LIGHT_GRAY,
+                               fg=LABEL_COLOR, padx=24, font=SMALL_FONT_STYLE)
+        total_label.pack(expand=True, fill='both')
+
+        label = tk.Label(self.display_frame, text=self.current_expression, anchor=tk.E, bg=LIGHT_GRAY,
+                         fg=LABEL_COLOR, padx=24, font=LARGE_FONT_STYLE)
+        label.pack(expand=True, fill='both')
+
+        return total_label, label
+
+    def create_display_frame(self):
+        frame = tk.Frame(self.window, height=221, bg=LIGHT_GRAY)
+        frame.pack(expand=True, fill="both")
+        return frame
+
+    def add_to_expression(self, value):
+        self.current_expression += str(value)
+        self.update_label()
+
+    def create_digit_buttons(self):
+        for digit, grid_value in self.digits.items():
+            button = tk.Button(self.buttons_frame, text=str(digit), bg=WHITE, fg=LABEL_COLOR, font=DIGITS_FONT_STYLE,
+                               borderwidth=0, command=lambda x=digit: self.add_to_expression(x))
+            button.grid(row=grid_value[0], column=grid_value[1], sticky=tk.NSEW)
+
+    def append_operator(self, operator):
+        self.current_expression += operator
+        self.total_expression += self.current_expression
+        self.current_expression = ""
+        self.update_total_label()
+        self.update_label()
