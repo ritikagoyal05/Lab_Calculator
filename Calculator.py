@@ -90,3 +90,22 @@ class Calculator:
         self.current_expression = ""
         self.update_total_label()
         self.update_label()
+        
+    def create_operator_buttons(self):
+        i = 0
+        for operator, symbol in self.operations.items():
+            button = tk.Button(self.buttons_frame, text=symbol, bg=OFF_WHITE, fg=LABEL_COLOR, font=DEFAULT_FONT_STYLE,
+                               borderwidth=0, command=lambda x=operator: self.append_operator(x))
+            button.grid(row=i, column=4, sticky=tk.NSEW)
+            i += 1
+
+    def clear(self):
+        self.current_expression = ""
+        self.total_expression = ""
+        self.update_label()
+        self.update_total_label()
+
+    def create_clear_button(self):
+        button = tk.Button(self.buttons_frame, text="C", bg=OFF_WHITE, fg=LABEL_COLOR, font=DEFAULT_FONT_STYLE,
+                           borderwidth=0, command=self.clear)
+        button.grid(row=0, column=1, sticky=tk.NSEW)
