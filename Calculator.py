@@ -1,4 +1,3 @@
-# Python Code for making calculator
 import tkinter as tk
 
 LARGE_FONT_STYLE = ("Arial", 40, "bold")
@@ -90,7 +89,7 @@ class Calculator:
         self.current_expression = ""
         self.update_total_label()
         self.update_label()
-        
+
     def create_operator_buttons(self):
         i = 0
         for operator, symbol in self.operations.items():
@@ -109,7 +108,6 @@ class Calculator:
         button = tk.Button(self.buttons_frame, text="C", bg=OFF_WHITE, fg=LABEL_COLOR, font=DEFAULT_FONT_STYLE,
                            borderwidth=0, command=self.clear)
         button.grid(row=0, column=1, sticky=tk.NSEW)
-        
 
     def square(self):
         self.current_expression = str(eval(f"{self.current_expression}**2"))
@@ -125,6 +123,45 @@ class Calculator:
         self.update_label()
 
     def create_sqrt_button(self):
-        button = tk.Button(self.buttons_frame, text="\u2u21ax", bg=OFF_WHITE, fg=LABEL_COLOR, font=DEFAULT_FONT_STYLE,
+        button = tk.Button(self.buttons_frame, text="\u221ax", bg=OFF_WHITE, fg=LABEL_COLOR, font=DEFAULT_FONT_STYLE,
                            borderwidth=0, command=self.sqrt)
         button.grid(row=0, column=3, sticky=tk.NSEW)
+
+    def evaluate(self):
+        self.total_expression += self.current_expression
+        self.update_total_label()
+        try:
+            self.current_expression = str(eval(self.total_expression))
+
+            self.total_expression = ""
+        except Exception as e:
+            self.current_expression = "Error"
+        finally:
+            self.update_label()
+
+    def create_equals_button(self):
+        button = tk.Button(self.buttons_frame, text="=", bg=LIGHT_BLUE, fg=LABEL_COLOR, font=DEFAULT_FONT_STYLE,
+                           borderwidth=0, command=self.evaluate)
+        button.grid(row=4, column=3, columnspan=2, sticky=tk.NSEW)
+
+    def create_buttons_frame(self):
+        frame = tk.Frame(self.window)
+        frame.pack(expand=True, fill="both")
+        return frame
+
+    def update_total_label(self):
+        expression = self.total_expression
+        for operator, symbol in self.operations.items():
+            expression = expression.replace(operator, f' {symbol} ')
+        self.total_label.config(text=expression)
+
+    def update_label(self):
+        self.label.config(text=self.current_expression[:11])
+
+    def run(self):
+        self.window.mainloop()
+
+
+if __name__ == "__main__":
+    calc = Calculator()
+    calc.run()
